@@ -1,0 +1,66 @@
+{% extends "layout.jinja2" %}
+
+{#
+<!-- {% block pagestyles %}
+  {% assets "profile_less_bundle" %}
+    <link href="{{ ASSET_URL }}" rel="stylesheet" type="text/css">
+  {% endassets %}
+{% endblock %} -->
+#}
+
+{% block content %}
+  {% include "navigation.jinja2" %}
+
+  <div class="bs-docs-section">
+    <div class="row">
+          <h2> User Info:</h2>
+          <h1 class="text-primary">{{ current_user.name }}
+          </h1>
+          {#
+          <!-- <div class="user-meta">
+            <div class="user-title meta"><span class="meta-name">Title:</span> <span>{{ job }}</span></div>
+            <div class="user-location meta"><span class="meta-name">Address:</span> <span>{{ current_user.address }}</span></div>
+            <div class="user-location meta"><span class="meta-name">Birthday:</span> <span>{{ current_user.birthdate }}</span></div>
+            <!-- <a href="{{ current_user.website }}">{{ current_user.website }}</a></div> -->
+          #}
+            <h2 class="text-info"> Linked Addresses: </h2>
+            <table class="table table-hover">
+              {% if current_user.addresses %}
+                <tr scope="col">
+                  <th>Nickname</th>
+                  <th>Address</th>
+                  <th>Transactions</th>
+                  <th>Transfers</th>
+                </tr>
+                {% for address in current_user.addresses %}
+                    {#<!-- <img class="product-image" src="{{ product.image }}" alt="profile"/> --> #}
+                    <tr scope="row">
+                      <th>{{ address.nickname }}</th>
+                      <th>{{ address.address }}</th>
+                      <th>{{ address.transactions|length }}</th>
+                      <th>{{ address.transfers|length }}</th>
+                    </tr>
+                {% endfor %}
+              {% else %}
+                <p> Don't have any addresses added... </p>
+              {% endif %}
+          </table>
+          <a href="{{ url_for('address_bp.add') }}">
+            <button type="button" class="btn btn-outline-primary">Add Address</button>
+          </a>
+          <div class="btn-group" role="group">
+          <a href="{{ url_for('transaction_bp.load') }}">
+            <button type="button" class="btn btn-outline-danger">Load Transactions</button>
+          </a>
+          <a href="{{ url_for('transfer_bp.load') }}">
+            <button type="button" class="btn btn-outline-danger">Load Transfers</button>
+          </a>
+          </div>
+        </div>
+      </div>
+
+{#
+  <!-- {% include "blueprintinfo.jinja2" %} -->
+#}
+
+{% endblock %}
