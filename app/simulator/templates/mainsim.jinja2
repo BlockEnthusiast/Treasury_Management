@@ -1,0 +1,153 @@
+{% extends "layout.jinja2" %}
+
+{#
+<!-- {% block pagestyles %}
+  {% assets "home_less_bundle" %}
+    <link href="{{ ASSET_URL }}" rel="stylesheet" type="text/css">
+  {% endassets %}
+{% endblock %} -->
+#}
+
+{% block content %}
+  {% include "navigation.jinja2" %}
+
+  <div class="container">
+    <div class="row">
+      <h1>{{ title }}</h1>
+      <h2>{{ subtitle }}</h2>
+
+
+
+      {#
+      <!-- <div class="products">
+        {% for product in products %}
+          <a href="/products/{{ loop.index - 1 }}/" class="product-preview">
+            <img class="product-image" src="{{ product.image }}" alt="profile"/>
+            <div class="name">{{ product.name }}</div>
+            <div class="price">${{ product.salePrice }}</div>
+          </a>
+        {% endfor %}
+      </div> -->
+      #}
+
+        <h2 class="text-info"> Active Simulation : {{ active_sim.sim_name }}</h2>
+        <a href="{{ url_for('simulator_bp.new') }}">
+          <button type="button" class="btn btn-info">New</button>
+        </a>
+        <a href="{{ url_for('simulator_bp.run', y_volume=40000) }}">
+          <button type="button" class="btn btn-success">Run 40k</button>
+        </a>
+        <a href="{{ url_for('simulator_bp.run', y_volume=1000000) }}">
+          <button type="button" class="btn btn-success">Run 1m</button>
+        </a>
+        <table class="table table-hover">
+          {% if current_user.simulations %}
+            <tr class="table-dark" scope="col">
+              <th>id</th>
+              <th>name</th>
+              <th>days</th>
+              <th>active</th>
+              <th>AMMs</th>
+            </tr>
+            {% for sim in [active_sim] %}
+                {#<!-- <img class="product-image" src="{{ product.image }}" alt="profile"/> --> #}
+                {% if sim.active %}
+                  <tr class="table-success">
+                {% else %}
+                  <tr >
+                {% endif %}
+                  <th scope="row">{{ sim.id }}</th>
+                  <th>{{ sim.sim_name }}</th>
+                  <th>{{ sim.days }}</th>
+                  <th>{{ sim.active }}</th>
+                  <th>{{ sim.amms|length }}</th>
+                </tr>
+            {% endfor %}
+          {% else %}
+            <p> Don't have any simulations added... </p>
+          {% endif %}
+      </table>
+      <h3 class="text-info"> Linked AMMs : {{ active_sim.amms|length }}</h3>
+      <a href="{{ url_for('amm_bp.new') }}">
+        <button type="button" class="btn btn-info">Add AMM</button>
+      </a>
+      <table class="table table-hover">
+        {% if active_sim.amms %}
+          <tr class="table-dark" scope="col">
+            <th>id</th>
+            <th>name</th>
+            <th>X</th>
+            <th>Bal X</th>
+            <th>Weight X</th>
+            <th>Y</th>
+            <th>Bal Y</th>
+            <th>Dynamic</th>
+            <th>Price</th>
+            <th>Records</th>
+            <th>Options</th>
+          </tr>
+          {% for amm in active_sim.amms %}
+              {#<!-- <img class="product-image" src="{{ product.image }}" alt="profile"/> --> #}
+                <tr >
+                <th scope="row"><a href="{{ url_for('amm_bp.delete', id=amm.id )}}">{{ amm.id }}</a></th>
+                <th>{{ amm.name }}</th>
+                <th>{{ amm.name_x }}</th>
+                <th>{{ amm.bal_x }}</th>
+                <th>{{ amm.weight_x }}</th>
+                <th>{{ amm.name_y }}</th>
+                <th>{{ amm.bal_y }}</th>
+                <th>{{ amm.is_dynamic }}</th>
+                <th>{{ amm.y_price() }}</th>
+                <th>{{ amm.records|length }}</th>
+                <th> <a href="{{ url_for('amm_bp.reset', id=amm.id) }}">
+                        <button type="button" class="btn btn-outline-warning">Reset</button>
+                      </a>
+                </th>
+
+              </tr>
+          {% endfor %}
+        {% else %}
+          <p> Don't have any amms added... </p>
+        {% endif %}
+    </table>
+    {% for amm in active_sim.amms %}
+      <div class="row">
+        <h3>Expanded AMM: {{ amm.name }}</h3>
+        <img class="img-fluid" src="{{ url_for('plotter_bp.amm_maps', id= amm.id) }}" alt="my plot">
+      </div>
+      <table class="table table-hover">
+        {% if active_sim.amms %}
+          <tr class="table-dark" scope="col">
+            <th>Balance {{ amm.name_x}}</th>
+            <th>Price {{ amm.name_x}} in {{ amm.name_y}}</th>
+            <th>Weight {{ amm.name_x}}</th>
+            <th>Balance {{ amm.name_y}}</th>
+            <th>Price {{ amm.name_y}} in {{ amm.name_x}}</th>
+          </tr>
+          {% for amm in active_sim.amms %}
+              {#<!-- <img class="product-image" src="{{ product.image }}" alt="profile"/> --> #}
+                <tr >
+                <th>{{ amm.bal_x }}</th>
+                <th>{{ amm.x_price() }}</th>
+                <th>{{ amm.weight_x }}</th>
+                <th>{{ amm.bal_y }}</th>
+                <th>{{ amm.y_price() }}</th>
+              </tr>
+          {% endfor %}
+        {% else %}
+          <p> Don't have any amms added... </p>
+        {% endif %}
+    </table>
+    {% endfor %}
+    </div>
+    <div class="row">
+
+    </div>
+
+  </div>
+
+{#
+ <!-- {% include "blueprintinfo.jinja2" %} -->
+#}
+
+{% endblock %}

@@ -2,8 +2,7 @@
 from .. import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-
-from ..address.models import Address
+from ..simulator.models import Simulation
 
 class User(UserMixin, db.Model):
     """User account model."""
@@ -36,9 +35,9 @@ class User(UserMixin, db.Model):
         unique=False,
         nullable=True
     )
-    addresses = db.relationship('Address',
-                                backref='user',
-                                lazy=True)
+    simulations = db.relationship('Simulation',
+                            backref='user',
+                            lazy=True)
 
     def set_password(self, password):
         """Create hashed password."""
@@ -51,8 +50,11 @@ class User(UserMixin, db.Model):
         """Check hashed password."""
         return check_password_hash(self.password, password)
 
+    def active_sim(self):
+        return Simulation.query.filter_by(active=True).first()
+
     def __repr__(self):
-        return '<User {}>'.format(self.username)
+        return '<User {}>'.format(self.name)
 
     @property
     def serialize(self):

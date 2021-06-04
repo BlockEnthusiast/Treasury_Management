@@ -1,0 +1,75 @@
+{% extends "layout.jinja2" %}
+
+{#
+<!-- {% block pagestyles %}
+  {% assets "home_less_bundle" %}
+    <link href="{{ ASSET_URL }}" rel="stylesheet" type="text/css">
+  {% endassets %}
+{% endblock %} -->
+#}
+
+{% block content %}
+  {% include "navigation.jinja2" %}
+
+  <div class="container">
+    <div class="row">
+      <h1>{{ title }}</h1>
+      <h2>{{ subtitle }}</h2>
+{#
+        <!-- <h2 class="text-info"> Records : {{ }}</h2>
+        <a href="{{ url_for('simulator_bp.new') }}">
+          <button type="button" class="btn btn-info">New</button>
+        </a>
+        <a href="{{ url_for('simulator_bp.run', y_volume=40000) }}">
+          <button type="button" class="btn btn-success">Run 40k</button>
+        </a>
+        <a href="{{ url_for('simulator_bp.run', y_volume=1000000) }}">
+          <button type="button" class="btn btn-success">Run 1m</button>
+        </a> -->
+      #}
+      <h3 class="text-info"> AMM Records: {{ active_sim.amms|length }}</h3>
+      <!-- <a href="{{ url_for('amm_bp.new') }}">
+        <button type="button" class="btn btn-info">Add AMM</button>
+      </a> -->
+      <table class="table table-hover">
+        {% if amm_record_books %}
+          {% for book in amm_record_books %}
+          <table class="table table-hover">
+            <tr class="table-dark" scope="col">
+              <th>id</th>
+              <th>AMM id</th>
+              <th>Balance X</th>
+              <th>Price X</th>
+              <th>Balance Y</th>
+              <th>Price Y</th>
+              <th>Constant Product</th>
+            </tr>
+            {% for record in book %}
+                {#<!-- <img class="product-image" src="{{ product.image }}" alt="profile"/> --> #}
+                  <tr >
+                  <th scope="row"><a href="#">{{ record.id }}</a></th>
+                  <th>{{ record.amm_id }}</th>
+                  <th>{{ record.bal_x }}</th>
+                  <th>{{ record.token_price_x }}</th>
+                  <th>{{ record.bal_y }}</th>
+                  <th>{{ record.token_price_y }}</th>
+                  <th>{{ record.constant_product }}</th>
+                </tr>
+            {% endfor %}
+          </table>
+          {% endfor %}
+        {% else %}
+          <p> Don't have any amms added... </p>
+        {% endif %}
+    </div>
+    <div class="row">
+
+    </div>
+
+  </div>
+
+{#
+ <!-- {% include "blueprintinfo.jinja2" %} -->
+#}
+
+{% endblock %}

@@ -32,6 +32,9 @@ def init_app():
         from .home import routes
         from .auth import routes
         from .user import routes
+        from .simulator import routes
+        from .amm import routes
+        from .plotter import routes
 
 
         # from .api import routes
@@ -41,6 +44,9 @@ def init_app():
         app.register_blueprint(home.routes.home_bp)
         app.register_blueprint(auth.routes.auth_bp, url_prefix='/auth')
         app.register_blueprint(user.routes.user_bp, url_prefix='/user')
+        app.register_blueprint(simulator.routes.simulator_bp, url_prefix='/simulator')
+        app.register_blueprint(amm.routes.amm_bp, url_prefix='/amm')
+        app.register_blueprint(plotter.routes.plotter_bp, url_prefix='/plotter')
 
         # Create Database Models
         db.create_all()

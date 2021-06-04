@@ -23,37 +23,49 @@
             <div class="user-location meta"><span class="meta-name">Birthday:</span> <span>{{ current_user.birthdate }}</span></div>
             <!-- <a href="{{ current_user.website }}">{{ current_user.website }}</a></div> -->
           #}
-            <h2 class="text-info"> Linked Addresses: </h2>
+            <h2 class="text-info"> Linked Simulations: </h2>
             <table class="table table-hover">
-              {% if current_user.addresses %}
-                <tr scope="col">
-                  <th>Nickname</th>
-                  <th>Address</th>
-                  <th>Transactions</th>
-                  <th>Transfers</th>
+              {% if current_user.simulations %}
+                <tr class="table-dark" scope="col">
+                  <th>id</th>
+                  <th>name</th>
+                  <th>days</th>
+                  <th>active</th>
+                  <th>AMMs</th>
+                  <th>Options</th>
                 </tr>
-                {% for address in current_user.addresses %}
+                {% for sim in current_user.simulations %}
                     {#<!-- <img class="product-image" src="{{ product.image }}" alt="profile"/> --> #}
-                    <tr scope="row">
-                      <th>{{ address.nickname }}</th>
-                      <th>{{ address.address }}</th>
-                      <th>{{ address.transactions|length }}</th>
-                      <th>{{ address.transfers|length }}</th>
+                    {% if sim.active %}
+                      <tr class="table-success">
+                    {% else %}
+                      <tr >
+                    {% endif %}
+                      <th scope="row">{{ sim.id }}</th>
+                      <th>{{ sim.sim_name }}</th>
+                      <th>{{ sim.days }}</th>
+                      <th>{{ sim.active }}</th>
+                      <th>{{ sim.amms|length }}</th>
+                      <th> <a href="{{ url_for('simulator_bp.activate', id=sim.id) }}">
+                              <button type="button" class="btn btn-outline-success">Activate</button>
+                            </a>
+                            <a href="{{ url_for('simulator_bp.delete', id=sim.id) }}">
+                              <button type="button" class="btn btn-outline-danger">Delete</button>
+                            </a>
+                      </th>
                     </tr>
                 {% endfor %}
               {% else %}
-                <p> Don't have any addresses added... </p>
+                <p> Don't have any simulations added... </p>
               {% endif %}
           </table>
-          <a href="{{ url_for('address_bp.add') }}">
-            <button type="button" class="btn btn-outline-primary">Add Address</button>
+          {% if current_user.simulations|length > 0 %}
+          <a href="{{ url_for('simulator_bp.dashboard') }}">
+            <button type="button" class="btn btn-success">Active Simulation</button>
           </a>
-          <div class="btn-group" role="group">
-          <a href="{{ url_for('transaction_bp.load') }}">
-            <button type="button" class="btn btn-outline-danger">Load Transactions</button>
-          </a>
-          <a href="{{ url_for('transfer_bp.load') }}">
-            <button type="button" class="btn btn-outline-danger">Load Transfers</button>
+          {% endif %}
+          <a href="{{ url_for('simulator_bp.new') }}">
+            <button type="button" class="btn btn-info">New Simulation</button>
           </a>
           </div>
         </div>

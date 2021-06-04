@@ -15,7 +15,7 @@ def home():
     """Homepage."""
     return render_template(
         'index.jinja2',
-        title='Flask Blueprint Demo',
-        subtitle='Demonstration of Flask blueprints in action.',
+        title='Treasury Farming Manager',
+        subtitle='Modeling effects of Treasury Farming.',
         template='home-template',
     )
