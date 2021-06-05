@@ -1,13 +1,13 @@
 from flask import Blueprint
 from flask import current_app as app
-
-from flask_login import logout_user
-
 from flask import Blueprint, redirect, render_template, flash, request, session, url_for
 from flask_login import login_required, logout_user, current_user, login_user
+
 from .forms import LoginForm, SignupForm
+
 from ..user.models import db, User
-from .. import login_manager
+
+from ... import login_manager
 
 # Blueprint Configuration
 auth_bp = Blueprint(
@@ -28,7 +28,7 @@ def login():
     """
     # Bypass if user is logged in
     if current_user.is_authenticated:
-        return redirect(url_for('user_bp.dashboard'))
+        return redirect(url_for('simulation_bp.dashboard'))
 
     form = LoginForm()
     # Validate login attempt

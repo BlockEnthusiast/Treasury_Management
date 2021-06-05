@@ -8,7 +8,7 @@ from flask import Response
 
 import io
 
-from ..amm.models import AMM
+from ...mechanisms.amm.models import AMM
 from .plotter import Plotter
 
 # Blueprint Configuration

@@ -8,12 +8,10 @@ from flask import request
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import io
-# from pandas import DataFrame;
-import pandas as pd
+
 
 from .forms import AMMForm
 from .models import  db, AMM, AMM_Record
-# from ..plotter.plotter import Plotter
 
 # Blueprint Configuration
 amm_bp = Blueprint(
@@ -22,12 +20,6 @@ amm_bp = Blueprint(
     template_folder='templates',
     static_folder='static'
 )
-
-# amm_bp.route('/', methods=['GET'])(index)
-# amm_bp.route('/', methods=['POST'])(store)
-# amm_bp.route('/<int:user_id>', methods=['GET'])(show)
-# amm_bp.route('/<int:user_id>/edit', methods=['POST'])(update)
-# amm_bp.route('/<int:user_id>', methods=['DELETE'])(destroy)
 
 # """Logged-in page routes."""
 # @amm_bp.route('/', methods=['GET'])
@@ -152,7 +144,7 @@ def apply_volume(buy, sell, move_size):
                 best_priced_pool = i
                 print("Pool: {}, Price: {}".format(pool.name, pool.y_price()))
 
-            elif amms[i].y_price() < pool.y_price():
+            elif amms[i].x_price() > pool.x_price():
                 print("New Best Pool: {}, Price: {}".format(pool.name, pool.y_price()))
                 print("diff {}".format(amms[i].y_price()  - pool.y_price()))
                 best_priced_pool = i
@@ -164,18 +156,16 @@ def apply_volume(buy, sell, move_size):
         if not is_positive: move_this *=-1
         old_price = amms[best_priced_pool].y_price()
         amms[best_priced_pool].apply_volume(move_this)
-        new_price = amms[best_priced_pool].y_price()
         db.session.commit()
-        print("\tbest {}".format(amms[best_priced_pool].y_price()))
-        print("\tbest {}".format(amms[best_priced_pool].id))
-        print("\t\tMoved Market {}".format(new_price - old_price))
     for amm in amms:
-        log_record(amm)
+        mrr = amm.most_recent_record()
+        if mrr.bal_x != amm.bal_x and mrr.bal_y != amm.bal_y:
+            create_record(amm)
     db.session.commit()
     return True
 
 
-def log_record(amm):
+def create_record(amm):
     print("LOGGING ALL THE RECORDS!!!!!!")
     record = AMM_Record(
         amm_id = amm.id,

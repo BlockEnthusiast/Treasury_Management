@@ -1,38 +1,31 @@
 """Database models."""
 from .. import db
 
-class Simulation(db.Model):
-    """Manage Simulation references."""
+class Market(db.Model):
+    """Manage Market references."""
     __tablename__ = 'simulations'
     id = db.Column(
         db.Integer,
         primary_key=True
     )
-    sim_name = db.Column(
-        db.String(100),
+    buy_volume = db.Column(
+        db.float,
         nullable=True,
         unique=True
     )
-    days = db.Column(
-        db.Integer,
-        nullable=False,
-        default=30,
-    )
-    user_id = db.Column(
-        db.Integer,
-        db.ForeignKey('users.id'),
-        nullable=False
-    )
-    active = db.Column(
-            db.Boolean,
-            default=True
+    sell_volume = db.Column(
+        db.true,
+        nullable=True,
+        unique=True
     )
     amms = db.relationship('AMM',
                             backref='simulation',
                             lazy=True)
-    # markets = db.relationship('Market',
-    #                         backref='simulation',
-    #                         lazy=True)
+    simulation_id = db.Column(
+        db.Integer,
+        db.ForeignKey('simulations.id'),
+        nullable=False
+    )
 
     @property
     def serialize(self):
