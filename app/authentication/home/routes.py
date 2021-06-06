@@ -13,6 +13,10 @@ home_bp = Blueprint(
 @home_bp.route('/', methods=['GET'])
 def home():
     """Homepage."""
+    # Bypass if user is logged in
+    if current_user.is_authenticated:
+        return redirect(url_for('user_bp.dashboard'))
+
     return render_template(
         'index.jinja2',
         title='Treasury Farming Manager',

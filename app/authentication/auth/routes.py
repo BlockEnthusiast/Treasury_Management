@@ -28,7 +28,7 @@ def login():
     """
     # Bypass if user is logged in
     if current_user.is_authenticated:
-        return redirect(url_for('simulator_bp.dashboard'))
+        return redirect(url_for('user_bp.dashboard'))
 
     form = LoginForm()
     # Validate login attempt
@@ -56,6 +56,10 @@ def signup():
     GET requests serve sign-up page.
     POST requests validate form & user creation.
     """
+    # Bypass if user is logged in
+    if current_user.is_authenticated:
+        return redirect(url_for('user_bp.dashboard'))
+
     form = SignupForm()
     if form.validate_on_submit():
         existing_user = User.query.filter_by(name=form.name.data).first()
