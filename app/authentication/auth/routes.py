@@ -28,7 +28,7 @@ def login():
     """
     # Bypass if user is logged in
     if current_user.is_authenticated:
-        return redirect(url_for('simulation_bp.dashboard'))
+        return redirect(url_for('simulator_bp.dashboard'))
 
     form = LoginForm()
     # Validate login attempt

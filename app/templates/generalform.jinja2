@@ -19,7 +19,7 @@
 
     <h1>{{ title }}</h1>
 
-    <form method="POST" action="{{ url_for('simulator_bp.new') }}">
+    <form method="POST" action="{{ url_for(request.endpoint) }}">
       {{ form.csrf_token }}
       {% for field in form %}
         {% if field.type != "SubmitField" and field.type != "csrf_token" %}
@@ -46,4 +46,5 @@
 
   </div>
 
+  {% include "blueprintinfo.jinja2" %}
 {% endblock %}
