@@ -62,7 +62,7 @@ def new():
         db.session.commit()
         return redirect(url_for('simulator_bp.dashboard'))
     return render_template(
-        'newamm.jinja2',
+        'generalform.jinja2',
         title='New AMM.',
         form=form,
         template='new-amm',
@@ -98,14 +98,7 @@ def reset(id):
         target_amm.seed(earliest.bal_x, earliest.bal_y)
         # db.session.delete(earliest)
         db.session.commit()
-        return redirect(url_for('simulator_bp.dashboard'))
-    return render_template(
-        'newamm.jinja2',
-        title='New AMM.',
-        form=form,
-        template='new-amm',
-        body="Sign up for a user account."
-    )
+    return redirect(url_for('simulator_bp.dashboard'))
 
 
 """Logged-in page routes."""
@@ -142,14 +135,14 @@ def apply_volume(buy, sell, move_size):
         for i, pool in enumerate(amms):
             if best_priced_pool == None:
                 best_priced_pool = i
-                print("Pool: {}, Price: {}".format(pool.name, pool.y_price()))
+                print("Best Pool: {}, Price: {}".format(pool.name, pool.y_price()))
 
-            elif amms[i].x_price() > pool.x_price():
-                print("New Best Pool: {}, Price: {}".format(pool.name, pool.y_price()))
-                print("diff {}".format(amms[i].y_price()  - pool.y_price()))
+            if amms[best_priced_pool].x_price() > pool.x_price():
+                print("\tNew Best Pool: {}, Price: {}".format(pool.name, pool.y_price()))
+                print("\tdiff {}".format(amms[i].y_price()  - pool.y_price()))
                 best_priced_pool = i
             else:
-                print("diff {}".format(amms[i].y_price()  - pool.y_price()))
+                print("\tdiff {}".format(amms[i].y_price()  - pool.y_price()))
 
         move_this = move_size if net_vol > move_size else net_vol
         net_vol -= move_this

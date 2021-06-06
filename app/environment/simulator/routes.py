@@ -55,7 +55,7 @@ def new():
         db.session.commit()
         return redirect(url_for('simulator_bp.dashboard'))
     return render_template(
-        'newsim.jinja2',
+        'generalform.jinja2',
         title='New Simulation.',
         form=form,
         template='new-simulation-page',
@@ -106,7 +106,7 @@ def delete(id):
                 db.session.delete(record)
 
             db.session.delete(amm)
-            
+
         db.session.delete(target_sim)
         db.session.commit()
     return redirect(url_for('simulator_bp.dashboard'))
