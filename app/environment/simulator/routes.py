@@ -24,7 +24,9 @@ simulator_bp = Blueprint(
 @login_required
 def dashboard():
     active_sim = current_user.active_sim()
-    print(active_sim.sim_name)
+    # Bypass if user is logged in
+    if not active_sim:
+        return redirect(url_for('simulator_bp.new'))
     return render_template(
         'mainsim.jinja2',
         title='Main Simulator',
@@ -85,8 +87,9 @@ Deactivates previously active simulation"""
 def activate(id):
     target_sim = Simulation.query.get(id)
     if target_sim:
-        active_sim = current_user.active_sim()
-        active_sim.active = False
+        current_active_sims = Simulation.query.filter_by(active=True).all()
+        for sim in current_active_sims:
+            sim.active = False
         target_sim.active = True
         db.session.commit()
     return redirect(url_for('simulator_bp.dashboard'))
