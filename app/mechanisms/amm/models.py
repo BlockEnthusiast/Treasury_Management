@@ -1,8 +1,8 @@
 import math
 # import matplotlib.pyplot as plt
 import numpy as np
-from ..simulator.models import Simulation
-from .. import db
+from ... environment.simulator.models import Simulation
+from ... import db
 
 # To differentiate first and last from movement display
 MARKER_FIRST = {
@@ -167,8 +167,8 @@ class AMM(db.Model):
             print("!!Reverse Tokens!!")
             print(tokens_in)
             print(tokens_out)
-            self.bal_x += tokens_out
-            self.bal_y -= tokens_in
+            self.bal_x -= tokens_out
+            self.bal_y += tokens_in
         return True
 
 

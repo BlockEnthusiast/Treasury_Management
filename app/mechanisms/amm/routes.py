@@ -8,12 +8,10 @@ from flask import request
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import io
-# from pandas import DataFrame;
-import pandas as pd
+
 
 from .forms import AMMForm
 from .models import  db, AMM, AMM_Record
-# from ..plotter.plotter import Plotter
 
 # Blueprint Configuration
 amm_bp = Blueprint(
@@ -22,12 +20,6 @@ amm_bp = Blueprint(
     template_folder='templates',
     static_folder='static'
 )
-
-# amm_bp.route('/', methods=['GET'])(index)
-# amm_bp.route('/', methods=['POST'])(store)
-# amm_bp.route('/<int:user_id>', methods=['GET'])(show)
-# amm_bp.route('/<int:user_id>/edit', methods=['POST'])(update)
-# amm_bp.route('/<int:user_id>', methods=['DELETE'])(destroy)
 
 # """Logged-in page routes."""
 # @amm_bp.route('/', methods=['GET'])
@@ -70,7 +62,7 @@ def new():
         db.session.commit()
         return redirect(url_for('simulator_bp.dashboard'))
     return render_template(
-        'newamm.jinja2',
+        'generalform.jinja2',
         title='New AMM.',
         form=form,
         template='new-amm',
@@ -106,14 +98,7 @@ def reset(id):
         target_amm.seed(earliest.bal_x, earliest.bal_y)
         # db.session.delete(earliest)
         db.session.commit()
-        return redirect(url_for('simulator_bp.dashboard'))
-    return render_template(
-        'newamm.jinja2',
-        title='New AMM.',
-        form=form,
-        template='new-amm',
-        body="Sign up for a user account."
-    )
+    return redirect(url_for('simulator_bp.dashboard'))
 
 
 """Logged-in page routes."""
@@ -150,32 +135,30 @@ def apply_volume(buy, sell, move_size):
         for i, pool in enumerate(amms):
             if best_priced_pool == None:
                 best_priced_pool = i
-                print("Pool: {}, Price: {}".format(pool.name, pool.y_price()))
+                print("Best Pool: {}, Price: {}".format(pool.name, pool.y_price()))
 
-            elif amms[i].y_price() < pool.y_price():
-                print("New Best Pool: {}, Price: {}".format(pool.name, pool.y_price()))
-                print("diff {}".format(amms[i].y_price()  - pool.y_price()))
+            if amms[best_priced_pool].x_price() > pool.x_price():
+                print("\tNew Best Pool: {}, Price: {}".format(pool.name, pool.y_price()))
+                print("\tdiff {}".format(amms[i].y_price()  - pool.y_price()))
                 best_priced_pool = i
             else:
-                print("diff {}".format(amms[i].y_price()  - pool.y_price()))
+                print("\tdiff {}".format(amms[i].y_price()  - pool.y_price()))
 
         move_this = move_size if net_vol > move_size else net_vol
         net_vol -= move_this
         if not is_positive: move_this *=-1
         old_price = amms[best_priced_pool].y_price()
         amms[best_priced_pool].apply_volume(move_this)
-        new_price = amms[best_priced_pool].y_price()
         db.session.commit()
-        print("\tbest {}".format(amms[best_priced_pool].y_price()))
-        print("\tbest {}".format(amms[best_priced_pool].id))
-        print("\t\tMoved Market {}".format(new_price - old_price))
     for amm in amms:
-        log_record(amm)
+        mrr = amm.most_recent_record()
+        if mrr.bal_x != amm.bal_x and mrr.bal_y != amm.bal_y:
+            create_record(amm)
     db.session.commit()
     return True
 
 
-def log_record(amm):
+def create_record(amm):
     print("LOGGING ALL THE RECORDS!!!!!!")
     record = AMM_Record(
         amm_id = amm.id,

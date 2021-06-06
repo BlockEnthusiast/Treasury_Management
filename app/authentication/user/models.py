@@ -1,8 +1,9 @@
 """Database models."""
-from .. import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from ..simulator.models import Simulation
+
+from ... import db
+from ... environment.simulator.models import Simulation
 
 class User(UserMixin, db.Model):
     """User account model."""

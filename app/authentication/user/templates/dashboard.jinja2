@@ -1,12 +1,5 @@
 {% extends "layout.jinja2" %}
 
-{#
-<!-- {% block pagestyles %}
-  {% assets "profile_less_bundle" %}
-    <link href="{{ ASSET_URL }}" rel="stylesheet" type="text/css">
-  {% endassets %}
-{% endblock %} -->
-#}
 
 {% block content %}
   {% include "navigation.jinja2" %}
@@ -16,13 +9,7 @@
           <h2> User Info:</h2>
           <h1 class="text-primary">{{ current_user.name }}
           </h1>
-          {#
-          <!-- <div class="user-meta">
-            <div class="user-title meta"><span class="meta-name">Title:</span> <span>{{ job }}</span></div>
-            <div class="user-location meta"><span class="meta-name">Address:</span> <span>{{ current_user.address }}</span></div>
-            <div class="user-location meta"><span class="meta-name">Birthday:</span> <span>{{ current_user.birthdate }}</span></div>
-            <!-- <a href="{{ current_user.website }}">{{ current_user.website }}</a></div> -->
-          #}
+
             <h2 class="text-info"> Linked Simulations: </h2>
             <table class="table table-hover">
               {% if current_user.simulations %}
@@ -35,7 +22,6 @@
                   <th>Options</th>
                 </tr>
                 {% for sim in current_user.simulations %}
-                    {#<!-- <img class="product-image" src="{{ product.image }}" alt="profile"/> --> #}
                     {% if sim.active %}
                       <tr class="table-success">
                     {% else %}
@@ -69,10 +55,8 @@
           </a>
           </div>
         </div>
-      </div>
 
-{#
-  <!-- {% include "blueprintinfo.jinja2" %} -->
-#}
+  {% include "blueprintinfo.jinja2" %}
+
 
 {% endblock %}
